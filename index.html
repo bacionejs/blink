@@ -1,0 +1,47 @@
+<meta charset="UTF-8"><body style="margin:0;background:white;touch-action:none"><canvas id="c" width="200" height="200" style="width:100dvmin;height:100dvmin"></canvas><script>
+const{round:U,min:I,max:J,abs:K}=Math,W=200,X=c.getContext('2d',{willReadFrequently:!0});
+X.font='130px sans-serif';X.textAlign='center';X.textBaseline='middle';X.fillText('👹',100,110);
+const m=X.getImageData(0,0,W,W),D=m.data;
+function scan(){
+  const v=new Uint8Array(40000);let B=[],P;
+  for(let y=0;y<W;y+=2){for(let x=0;x<W;x+=2){
+    let p=y*W+x;if(v[p])continue;let i=p*4;
+    if(D[i+3]>100&&D[i]<100&&D[i+1]<100&&D[i+2]<100){
+      let q=[[x,y]],s=[],nX=x,mX=x,nY=y,mY=y;
+      while(q.length){
+        let[nx,ny]=q.pop(),np=ny*W+nx;
+        if(nx<0||nx>=W||ny<0||ny>=W||v[np])continue;
+        v[np]=1;let ni=np*4;
+        if(D[ni+3]>100&&D[ni]<200&&D[ni+1]<200&&D[ni+2]<200){
+          s.push([nx,ny,ni]);nX=I(nX,nx);mX=J(mX,nx);nY=I(nY,ny);mY=J(mY,ny);
+          q.push([nx+1,ny],[nx-1,ny],[nx,ny+1],[nx,ny-1]);
+        }}
+      if(s.length>8&&s.length<800)B.push({x:nX,y:nY,w:mX-nX,h:mY-nY,a:s.length,pts:s});
+    }}
+  let C=B.filter(b=>{let a=b.w/(b.h||1),d=b.a/((b.w*b.h)||1);return a>.5&&a<2&&d>.45;});
+  if(C.length>=2){
+    C.sort((a,b)=>a.x-b.x);
+    for(let i=0;i<C.length;i++){for(let j=i+1;j<C.length;j++){
+      if(K(C[i].y-C[j].y)<20&&K(C[i].x-C[j].x)>25&&K(C[i].x-C[j].x)<110){P=[C[i],C[j]];break;}
+    }if(P)break;}
+  }if(P)break;
+  }return P;
+}
+function blink(P){
+  let[L,R]=P;
+  let g=b=>{
+    let cx=b.x+b.w/2,cy=b.y+b.h/2,pt=[[b.x-2,cy],[b.x+b.w+2,cy],[cx,b.y-2],[cx,b.y+b.h+2]],r=0,g0=0,b0=0,n=0;
+    pt.forEach(([sx,sy])=>{let px=U(sx),py=U(sy);if(px>=0&&px<W&&py>=0&&py<W){let pi=(py*W+px)*4;if(D[pi+3]>100){r+=D[pi];g0+=D[pi+1];b0+=D[pi+2];n++;}}});
+    return n?{r:U(r/n),g:U(g0/n),b:U(b0/n)}:{r:255,g:255,b:255};
+  };
+  let ls=g(L),rs=g(R),lc=L.pts.map(p=>({r:D[p[2]],g:D[p[2]+1],b:D[p[2]+2]})),rc=R.pts.map(p=>({r:D[p[2]],g:D[p[2]+1],b:D[p[2]+2]}));
+  let b=z=>{
+    L.pts.forEach((p,k)=>{D[p[2]]=z?ls.r:lc[k].r;D[p[2]+1]=z?ls.g:lc[k].g;D[p[2]+2]=z?ls.b:lc[k].b;});
+    R.pts.forEach((p,k)=>{D[p[2]]=z?rs.r:rc[k].r;D[p[2]+1]=z?rs.g:rc[k].g;D[p[2]+2]=z?rs.b:rc[k].b;});
+    X.putImageData(m,0,0);
+  };
+  b(!1);setInterval(()=>{b(!0);setTimeout(()=>b(!1),150);},2000);
+}
+let E=scan();if(E)blink(E);
+</script>
+
