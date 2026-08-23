@@ -4,6 +4,7 @@
 
 [Try it](https://bacionejs.github.io/blink)
 
+**TL;DR**: It's a nice algorithm, generalized to work with many faces, but you could simplify it a lot for your specific case.  
 
 The code renders an emoji onto a 200×200 canvas, reads its pixels, then uses a **flood-fill algorithm** to find dark connected regions and **heuristics for shape, density, size, and position** to identify two regions that are likely to be the eyes. It saves the original eye pixels and samples the surrounding colors, then every two seconds replaces the eye pixels with those surrounding colors for 150 ms, making the eyes appear to close before restoring them. It is essentially a tiny bit of **computer vision** that automatically finds and animates the emoji's eyes without knowing the emoji's geometry beforehand.
 
