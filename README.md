@@ -1,6 +1,6 @@
 <img width="30%" src="https://github.com/user-attachments/assets/910718ff-ca00-4ff4-9bb7-377dac134882" />
 
-Make emojis blink
+**Make emojis blink**
 
 [Try it](https://bacionejs.github.io/blink)
 
